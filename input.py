@@ -37,7 +37,7 @@ database(
 )
 
 catalystProperties(
-    metal = 'Pt111'
+    metal = 'Rh211'
 )
 
 generatedSpeciesConstraints(
