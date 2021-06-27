@@ -11,30 +11,30 @@ database(
     #reactionLibraries =['Surface/CPOX_Pt/Deutschmann2006','Surface/Rebrov_Pt111','Surface/Nitrogen','Surface/Arevalo_Pt111','Surface/Kraehnert_Pt111','Surface/Schneider_Pt111','Surface/Novell_Pt111','Surface/Offermans_Pt111','Surface/Scheuer_Pt'],
     seedMechanisms = ['Surface/Schneider_Rh211','Surface/Nitrogen'],
     kineticsDepositories = ['training'],
-    # kineticsFamilies = ['surface'],
-    kineticsFamilies = [
-    'Surface_Adsorption_Single',
-    'Surface_Adsorption_vdW',
-    'Surface_Adsorption_Dissociative',
-    'Surface_Dissociation',
-    'Surface_Abstraction',
+    kineticsFamilies = ['surface'],
+    #kineticsFamilies = [
+    #'Surface_Adsorption_Single',
+    #'Surface_Adsorption_vdW',
+    #'Surface_Adsorption_Dissociative',
+    #'Surface_Dissociation',
+    #'Surface_Abstraction',
     #'Surface_EleyRideal_Addition_Multiple_Bond',
     #'Surface_Migration',
-    'Surface_Dissociation_Double_vdW',
-    'Surface_Addition_Single_vdW',
-    'Surface_Dissociation_vdW',
-    'Surface_Abstraction_vdW',
+    #'Surface_Dissociation_Double_vdW',
+    #'Surface_Addition_Single_vdW',
+    #'Surface_Dissociation_vdW',
+    #'Surface_Abstraction_vdW',
     #'Surface_Dual_Adsorption_vdW',
     #'Surface_Dissociation_Beta',
-    'Surface_Adsorption_Abstraction_vdW',
+    #'Surface_Adsorption_Abstraction_vdW',
     #'Surface_Adsorption_Bidentate',
     #'Surface_Bidentate_Dissociation',
     #'Surface_DoubleBond_to_Bidentate', 
     #'Surface_vdW_to_Bidentate',
-    'Surface_Abstraction_Single_vdW',
+    #'Surface_Abstraction_Single_vdW',
     #'Surface_Adsorption_Dissociative_Double',
     #'default'
-    ],
+    #],
     kineticsEstimator = 'rate rules',
 )
 
@@ -116,6 +116,18 @@ species(
 )
 
 species(
+    label='NO2',
+    reactive=True,
+    structure=adjacencyList(
+"""
+multiplicity 2
+1 N u0 p1 c0 {2,D} {3,S}
+2 O u0 p2 c0 {1,D}
+3 O u1 p2 c0 {1,S}
+"""),
+)
+
+species(
     label='He',
     reactive=False,
     structure=adjacencyList(
@@ -125,8 +137,19 @@ species(
 )
 
 species(
+    label='H2OX',
+    reactive=True,
+    structure=adjacencyList(
+"""
+1 O u0 p2 c0 {2,S} {3,S}
+2 H u0 p0 c0 {1,S}
+3 H u0 p0 c0 {1,S}
+4 X u0 p0 c0
+"""),
+)
+species(
     label='NOX',
-    reactive=False,
+    reactive=True,
     structure=adjacencyList(
 """
 1 O u0 p2 c0 {2,D}
@@ -137,7 +160,7 @@ species(
 
 species(
     label='OX',
-    reactive=False,
+    reactive=True,
     structure=adjacencyList(
 """
 1 O u0 p2 c0 {2,D}
@@ -147,7 +170,7 @@ species(
 
 species(
     label='NX',
-    reactive=False,
+    reactive=True,
     structure=adjacencyList(
 """
 1 N u0 p1 c0 {2,T}
@@ -157,7 +180,7 @@ species(
 
 species(
     label='OHX',
-    reactive=False,
+    reactive=True,
     structure=adjacencyList(
 """
 1 O u0 p2 c0 {2,S} {3,S}
@@ -168,7 +191,7 @@ species(
 
 species(
     label='NH3X',
-    reactive=False,
+    reactive=True,
     structure=adjacencyList(
 """
 1 N u0 p1 c0 {2,S} {3,S} {4,S}
@@ -179,11 +202,59 @@ species(
 """),
 )
 
+species(
+    label='NH2X',
+    reactive=True,
+    structure=adjacencyList(
+"""
+1 N u0 p1 c0 {2,S} {3,S} {4,S}
+2 H u0 p0 c0 {1,S}
+3 H u0 p0 c0 {1,S}
+4 X u0 p0 c0 {1,S}
+"""),
+)
+
+species(
+    label='NHX',
+    reactive=True,
+    structure=adjacencyList(
+"""
+1 N u0 p1 c0 {2,S} {3,D}
+2 H u0 p0 c0 {1,S}
+3 X u0 p0 c0 {1,D}
+"""),
+)
+
+species(
+    label='N2OX',
+    reactive=True,
+    structure=adjacencyList(
+"""
+1 O u0 p2 c0 {2,D}
+2 N u0 p1 c0 {1,D} {3,S}
+3 N u0 p1 c0 {2,S} {4,D}
+4 X u0 p0 c0 {3,D}
+"""),
+)
+
+species(
+    label='NO2X',
+    reactive=True,
+    structure=adjacencyList(
+"""
+1 O u0 p2 c0 {3,S} {4,S}
+2 O u0 p2 c0 {3,D}
+3 N u0 p1 c0 {1,S} {2,D}
+4 X u0 p0 c0 {1,S}
+"""),
+)
+
+
 #-------------
 
 #temperature from 523-673K 
 surfaceReactor(  
-    temperature=[(500,'K'),(1500,'K')],
+    temperature=[(300,'K'),(1500,'K')],
     initialPressure=(1.0, 'bar'),
     nSims=6,
     initialGasMoleFractions={
@@ -194,11 +265,17 @@ surfaceReactor(
         "H2O":0.05,
         "N2O":0.0,
         "N2":0.0,
+        "NO2":0.0,
         "NX":0.0,
         "NOX":0.0,
         "NH3X":0.0,
+        "NH2X":0.0,
+        "NHX":0.0,
         "OX":0.0,
         "OHX":0.0,
+        "H2OX":0.0,
+        "N2OX":0.0,
+        "NO2X":0.0,
     },
     initialSurfaceCoverages={
         "X": 1.0,
